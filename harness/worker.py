@@ -11,8 +11,11 @@ import json
 import os
 import sys
 import traceback
+from pathlib import Path
 
 from harness import db
+
+ROOT = Path(__file__).resolve().parent.parent
 
 ALLOW_SIM = os.environ.get("DIFFERENTIAL_ALLOW_SIM") == "1"
 
@@ -67,7 +70,7 @@ def run(box: Sandbox) -> None:
         return turn.text
 
     box.status("attacking")
-    if attack["family"] == "vishing_call" and os.path.exists(f"audio/{attack['attack_id']}.mp3"):
+    if attack["family"] == "vishing_call" and (ROOT / "audio" / f"{attack['attack_id']}.mp3").exists():
         box.emit("audio", "caller", {"url": f"/audio/{attack['attack_id']}.mp3"})
 
     for channel, actor, text in attack["steps"]:
