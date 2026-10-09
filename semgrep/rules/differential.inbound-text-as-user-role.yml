@@ -1,0 +1,21 @@
+rules:
+  - id: differential.inbound-text-as-user-role
+    languages: [python]
+    severity: ERROR
+    message: handle_inbound() returns third-party caller/seller text as a plain user-role message without wrap_untrusted() or sanitize(), so spoofed actors (e.g. display name "user") can issue trusted instructions such as payment approvals.
+    patterns:
+      - pattern-inside: |
+          def handle_inbound(...):
+            ...
+      - pattern-inside: |
+          $CONTENT = $A if $COND else $B
+          ...
+      - pattern: |
+          return {"role": "user", "content": $CONTENT}
+      - pattern-not: |
+          return {"role": "user", "content": wrap_untrusted(...)}
+      - pattern-not: |
+          return {"role": "user", "content": sanitize(...)}
+      - pattern-not-inside: |
+          if channel == "user":
+            ...

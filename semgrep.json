@@ -1,0 +1,36 @@
+{
+  "baseline_config": "p/python",
+  "builds": {
+    "main": {
+      "findings": []
+    },
+    "pr": {
+      "findings": [
+        {
+          "rule_id": "var.folders.w1.jm_9lhbd5qx1pg4rdz58jc6m0000gn.T.differential.inbound-text-as-user-role",
+          "path": "shopagent/inbound.py",
+          "line": 26,
+          "message": "handle_inbound() returns third-party caller/seller text as a plain user-role message without wrap_untrusted() or sanitize(), so spoofed actors (e.g. display name \"user\") can issue trusted instructions such as payment approvals.",
+          "severity": "ERROR"
+        }
+      ]
+    }
+  },
+  "generated_rule": {
+    "id": "differential.inbound-text-as-user-role",
+    "yaml": "rules:\n  - id: differential.inbound-text-as-user-role\n    languages: [python]\n    severity: ERROR\n    message: handle_inbound() returns third-party caller/seller text as a plain user-role message without wrap_untrusted() or sanitize(), so spoofed actors (e.g. display name \"user\") can issue trusted instructions such as payment approvals.\n    patterns:\n      - pattern-inside: |\n          def handle_inbound(...):\n            ...\n      - pattern-inside: |\n          $CONTENT = $A if $COND else $B\n          ...\n      - pattern: |\n          return {\"role\": \"user\", \"content\": $CONTENT}\n      - pattern-not: |\n          return {\"role\": \"user\", \"content\": wrap_untrusted(...)}\n      - pattern-not: |\n          return {\"role\": \"user\", \"content\": sanitize(...)}\n      - pattern-not-inside: |\n          if channel == \"user\":\n            ...\n",
+    "fires_on_pr": true,
+    "silent_on_main": true,
+    "from_attack": "vishing_call-0",
+    "pr_matches": [
+      {
+        "rule_id": "var.folders.w1.jm_9lhbd5qx1pg4rdz58jc6m0000gn.T.differential.inbound-text-as-user-role",
+        "path": "shopagent/inbound.py",
+        "line": 26,
+        "message": "handle_inbound() returns third-party caller/seller text as a plain user-role message without wrap_untrusted() or sanitize(), so spoofed actors (e.g. display name \"user\") can issue trusted instructions such as payment approvals.",
+        "severity": "ERROR"
+      }
+    ],
+    "model": "claude-opus-5-5"
+  }
+}
