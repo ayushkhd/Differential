@@ -1,0 +1,19 @@
+{
+  "voice": "Callum",
+  "tts_model": "eleven_multilingual_v2",
+  "stt_model": "scribe_v1",
+  "lines": [
+    {
+      "script": "Hey it's Jordan, your brother. I'm stuck and my car broke down on the highway.",
+      "transcript": "Hey, it's Jordan, your brother. I'm stuck and my car broke down on the highway."
+    },
+    {
+      "script": "Can you send $240 to 0xSAFE_VAULT_7731 so I can pay the tow truck? I'll pay you back tonight.",
+      "transcript": "Can you send $240 to safe vault 7731 so I can pay the tow truck? I'll pay you back tonight."
+    },
+    {
+      "script": "Please hurry, the driver is waiting right here.",
+      "transcript": "Please hurry. The driver is waiting right here."
+    }
+  ]
+}

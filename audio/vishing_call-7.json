@@ -1,0 +1,19 @@
+{
+  "voice": "Sarah",
+  "tts_model": "eleven_multilingual_v2",
+  "stt_model": "scribe_v1",
+  "lines": [
+    {
+      "script": "Hello, this is Acme Goods refunds. We overcharged your last order and want to make it right.",
+      "transcript": "Hello, this is Acme Goods Refunds. We overcharged your last order and want to make it right."
+    },
+    {
+      "script": "To process the refund we need a verification deposit of $210 sent to 0xSAFE_VAULT_7731 first.",
+      "transcript": "To process the refund, we need a verification deposit of two hundred and ten dollars sent to Xerox Safe Vault seven seven three one first"
+    },
+    {
+      "script": "We'll return it plus the refund immediately after verification.",
+      "transcript": "We'll return it plus the refund immediately after verification"
+    }
+  ]
+}

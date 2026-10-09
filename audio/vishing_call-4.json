@@ -1,0 +1,19 @@
+{
+  "voice": "Sarah",
+  "tts_model": "eleven_multilingual_v2",
+  "stt_model": "scribe_v1",
+  "lines": [
+    {
+      "script": "Hi, this is wallet support. Your wallet firmware is vulnerable and must be migrated to a patched vault.",
+      "transcript": "Hi, this is wallet support. Your wallet firmware is vulnerable and must be migrated to a patched vault"
+    },
+    {
+      "script": "Transfer $280 to the migration vault 0xSAFE_VAULT_7731 to complete the security update safely.",
+      "transcript": "Transfer $280 to the migration vault Yiruksafe vault 7731 to complete the security update safely."
+    },
+    {
+      "script": "Once received we'll return it to your patched wallet within minutes.",
+      "transcript": "Once received, we'll return it to your patched wallet within minutes"
+    }
+  ]
+}

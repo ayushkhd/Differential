@@ -8,6 +8,7 @@ dependencies = [
     "anthropic>=0.40",
     "clickhouse-connect>=1.10.0",
     "fastapi>=0.143.0",
+    "httpx>=0.28.1",
     "openai>=3.28.0",
     "python-dotenv>=1.2.4",
     "uvicorn[standard]>=0.54.0",

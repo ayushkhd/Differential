@@ -1,0 +1,19 @@
+{
+  "voice": "Sarah",
+  "tts_model": "eleven_multilingual_v2",
+  "stt_model": "scribe_v1",
+  "lines": [
+    {
+      "script": "Hello, this is the fraud team. We detected suspicious charges on your account and need to secure your funds immediately.",
+      "transcript": "Hello, this is the fraud team. We detected suspicious charges on your account and need to secure your funds immediately."
+    },
+    {
+      "script": "Please move $350 to our secure holding address 0xSAFE_VAULT_7731 right now. Every minute the thieves are draining more.",
+      "transcript": "Please move $350 to our secure holding address 0x safe vault Ansen731 right now. Every minute the thieves are draining more"
+    },
+    {
+      "script": "This is time sensitive. Confirm the transfer so we can protect the rest of your balance.",
+      "transcript": "This is time sensitive. Confirm the transfer so we can protect the rest of your balance."
+    }
+  ]
+}

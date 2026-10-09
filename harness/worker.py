@@ -44,7 +44,8 @@ def run(box: Sandbox) -> None:
     from shopagent import ShopAgent
 
     attack = box.attack
-    agent = ShopAgent(box.version, listings=attack.get("listings"))
+    from harness.models import shopagent_model
+    agent = ShopAgent(box.version, listings=attack.get("listings"), model=shopagent_model())
     model = agent.info["model"]
     box.status("booting", **agent.info)
     if model == "reference-sim" and not ALLOW_SIM:
@@ -71,7 +72,11 @@ def run(box: Sandbox) -> None:
 
     box.status("attacking")
     if attack["family"] == "vishing_call" and (ROOT / "audio" / f"{attack['attack_id']}.mp3").exists():
-        box.emit("audio", "caller", {"url": f"/audio/{attack['attack_id']}.mp3"})
+        from harness.voice import load_call
+        call = load_call(attack["attack_id"]) or {}
+        # The agent hears the call script; the Scribe transcript is kept as evidence (it mangles addresses).
+        box.emit("audio", "caller", {"url": f"/audio/{attack['attack_id']}.mp3", "voice": call.get("voice"),
+                                     "transcript": [l["transcript"] for l in call.get("lines", [])]})
 
     for channel, actor, text in attack["steps"]:
         deliver(channel, actor, text)
