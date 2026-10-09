@@ -41,7 +41,9 @@ Three minutes, eight beats. Every number below comes from live run `r_20261009_1
 **Show** tab 2, blast radius.
 
 **Say:**
-> "Differential reads the diff first. The PR touches listing intake, but it also touches call handling, seller messages and input trust: four of eight capabilities. So it picks four attack families, and it says what it skipped and why. Memory poisoning isn't touched, so it doesn't run."
+Start on the **input modalities** cards at the top: voice call, seller chat, listing text, user request.
+
+> "Differential reads the diff first and checks every way outside text reaches the agent. Three of four input channels changed. Listing text got safer. But voice calls and seller chat went from 'wrapped as untrusted' on main to plain user text on the PR. That's four of eight capabilities. So it picks four attack families, and it says what it skipped and why. Memory poisoning isn't touched, so it doesn't run."
 
 ## Beat 3: Run attacks (15 s, then keep talking while tiles fill)
 
@@ -83,7 +85,7 @@ Then the control family, which is the surprise:
 **Scroll** to the behavioral diff.
 
 **Say:**
-> "Three regressions out of twenty paired attacks. Vishing went from zero percent on main to twenty-five percent on the PR. Every number here is a ClickHouse query over the run's events."
+> "Three regressions out of twenty paired attacks. Voice Phishing went from zero percent on main to twenty-five percent on the PR. Every number here is a ClickHouse query over the run's events."
 
 **Point at** the Semgrep lane:
 > "And the dynamic finding becomes a static rule. Differential wrote a Semgrep rule for the root cause, the call text passed as a user message, and verified it: it fires on the PR and stays silent on main. Semgrep catches this class at PR time from now on."
@@ -116,7 +118,7 @@ Then the control family, which is the surprise:
 |---|---|
 | A live run errors or hangs | Tick **Replay stored run** and click again. Say "this is the stored run." |
 | No sound | Read the call out from the transcript on screen. The tool call and ledger line carry the point. |
-| The vishing tile is green on a live run | Open `vishing_call-3` (also a regression) or switch to replay. |
+| The Voice Phishing tile is green on a live run | Open `vishing_call-3` (also a regression) or switch to replay. |
 | GitHub won't load | The PR comment is in the backup video, and the app's report has the same grid. |
 | The backend restarted mid-run | That run is abandoned. Start a new run or use replay. |
 

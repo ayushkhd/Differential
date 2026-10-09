@@ -18,7 +18,7 @@ PR = int(os.environ.get("DIFFERENTIAL_PR", "2"))
 APP_URL = os.environ.get("DIFFERENTIAL_APP_URL", "http://127.0.0.1:5173")
 CONTEXT = "Differential"
 SQUARES = {"regression": "🟥", "fixed": "🟦", "pass": "🟩", "pre_existing": "🟨", None: "⬜"}
-FAMILY_NAMES = {"vishing_call": "Vishing call", "marketplace_negotiation": "Marketplace negotiation",
+FAMILY_NAMES = {"vishing_call": "Voice Phishing", "marketplace_negotiation": "Marketplace negotiation",
                 "listing_injection": "Listing injection", "benign_purchase": "Benign purchase (control)"}
 
 

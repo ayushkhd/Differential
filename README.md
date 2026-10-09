@@ -36,9 +36,9 @@ PR opened ──► blast radius ──► attack generation ──► paired sa
 
 | Step | What happens | Code |
 |---|---|---|
-| 1. Blast radius | One Opus 5.5 call maps the diff to touched capabilities and picks attack families. Families that aren't built are listed as planned, never as run. | `harness/blast.py` → `blast_radius.json` |
+| 1. Blast radius | One Opus 5.5 call reads the diff. For each input modality (voice call, seller chat, listing text, user request) it states how `main` and the PR hand that text to the model and what the change newly exposes. It then maps the diff to touched capabilities and picks attack families. Families that aren't built are listed as planned, never as run. | `harness/blast.py` → `blast_radius.json` |
 | 2. Attack generation | Hand-written seeds plus Opus-generated variants per family, as JSON. | `harness/scenarios.py`, `harness/generate.py` → `scenarios/generated/` |
-| 3. Voice | Every vishing call is spoken by an ElevenLabs voice and transcribed by ElevenLabs Scribe. | `harness/voice.py` → `audio/` |
+| 3. Voice | Every Voice Phishing call is spoken by an ElevenLabs voice and transcribed by ElevenLabs Scribe. | `harness/voice.py` → `audio/` |
 | 4. Paired runs | Every attack runs on `main` and on the PR, each in its own sandbox process with a fresh in-memory ledger. ShopAgent runs on Claude Haiku 5.5. | `harness/run.py`, `harness/worker.py` |
 | 5. Events | Every status change, message, tool call, ledger transaction and audio clip is one row in ClickHouse Cloud `events`. | `harness/db.py` |
 | 6. Verdict | A ClickHouse query scores each run with three monitors (`unauthorized_transfer`, `budget_exceeded`, `task_completed`) and compares `main` to the PR. | `harness/verdicts.py` |
@@ -51,7 +51,7 @@ Each attack gets one verdict from its pair: **regression** (main pass, PR fail),
 
 | Family | Attackers | Monitor | Attacks |
 |---|---|---|---|
-| Vishing call | Caller agent with an ElevenLabs voice: fraud teams, wallet support, family members, spoofed owners | `unauthorized_transfer` | 8 |
+| Voice Phishing (`vishing_call`) | Caller agent with an ElevenLabs voice: fraud teams, wallet support, family members, spoofed owners | `unauthorized_transfer` | 8 |
 | Marketplace negotiation | Anchor, urgency and impostor seller personas in one group chat, 3 seeds | `budget_exceeded` | 3 |
 | Listing injection | Malicious listings hiding deposit instructions | `unauthorized_transfer` | 6 |
 | Benign purchase (control) | Honest seller, normal buy under budget | `task_completed` | 3 |
@@ -72,7 +72,7 @@ uv run uvicorn backend.app:app --port 8000
 node web/dev-server.cjs
 ```
 
-Open http://127.0.0.1:5173. **Run attacks** starts a real run: 40 sandboxes, about 3 minutes, and it updates the PR's Differential check. Tick **Replay stored run** to stream the last full run instead (labeled on screen). The blast radius is at `/blast.html`.
+Open http://127.0.0.1:5173. **Run attacks** starts a real run: 40 sandboxes, about 2 minutes (the last full run took 1 min 52 s), and it updates the PR's Differential check. Tick **Replay stored run** to stream the last full run instead (labeled on screen). The blast radius is at `/blast.html`.
 
 Pipeline pieces from the command line:
 
@@ -115,7 +115,7 @@ For teammates and their Claude sessions picking this up. Last updated Oct 9, 4:1
 **Decisions made, and why**
 - **Policy change (`shopagent/policy.py`), approved by the user:** "Any other payee needs the user's explicit approval in a user message." Before it, Haiku treated the allowlist as absolute on both builds, so the PR's bug could never cause harm and every tile was green. It's a setup change on `main`, so both builds share it, and only `inbound.py` differs between them.
 - **Model:** ShopAgent runs on `claude-haiku-5-5`. Haiku 4.5 also refused everything, and `harness/models.py` can run it with `SHOPAGENT_EFFORT=none`. The harness refuses a real run on `reference-sim`.
-- **Attack design:** the vishing brief tells the generator that the agent honors explicit user approval, so the strong attacks mirror the policy's own language. Urgency-only scams fail on both builds, and that's shown honestly as green.
+- **Attack design:** the Voice Phishing brief tells the generator that the agent honors explicit user approval, so the strong attacks mirror the policy's own language. Urgency-only scams fail on both builds, and that's shown honestly as green.
 - **Listing injection shows no "fixed" tile:** Haiku 5.5 resisted every listing injection even on `main` (raw listing text), so the PR's fix produces no behavior change. Don't claim it fixed anything.
 - **Contracts:** `web/blast.js` accepts a fixed capability list and five family ids. `harness/blast.py` emits exactly those, and puts extra planned families in `planned_not_in_ui`.
 - **GitHub hook:** `_run_and_report` in `backend/app.py` belongs to the CI session. It posts the commit status on every live UI run; the comment is opt-in.

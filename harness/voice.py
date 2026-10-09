@@ -1,7 +1,7 @@
-"""Voice for vishing calls (PRD P0-4): ElevenLabs speaks each caller line, then ElevenLabs Scribe
-transcribes the audio, and the harness feeds that transcript to step("call", ...).
+"""Voice for Voice Phishing calls (PRD P0-4): ElevenLabs speaks each caller line, then ElevenLabs Scribe
+transcribes it. The agent hears the call script; the Scribe transcript is kept as evidence.
 
-    uv run python -m harness.voice            # all vishing attacks without audio yet
+    uv run python -m harness.voice            # all Voice Phishing attacks without audio yet
     uv run python -m harness.voice --force
 
 Writes audio/<attack_id>.mp3 (the whole call) and audio/<attack_id>.json:

@@ -248,4 +248,4 @@ Label the button's result as a GitHub issue. Don't claim a Pi integration.
 | Blast radius | `GET /api/blast` |
 | Report | `GET /api/verdicts`, `GET /api/semgrep`, `POST /api/remediate` |
 
-Never cut: the vishing tile with working audio, and a clickable grid backed by real verdicts.
+Never cut: the Voice Phishing tile with working audio, and a clickable grid backed by real verdicts.
