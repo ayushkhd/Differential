@@ -1,0 +1,14 @@
+[project]
+name = "differential-shopagent"
+version = "0.1.0"
+description = "ShopAgent: the agent under test for Differential (contract 1)"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = ["anthropic>=0.40"]
+
+[dependency-groups]
+dev = ["pytest>=8.3"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
