@@ -1,0 +1,28 @@
+name: Semgrep
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  semgrep:
+    name: semgrep
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # On PRs, report only findings the change introduces (diff-aware against the base branch).
+      - name: Scan
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          BASELINE=""
+          if [ -n "$GITHUB_BASE_REF" ]; then
+            BASELINE="--baseline-commit $(git merge-base HEAD "origin/$GITHUB_BASE_REF")"
+          fi
+          semgrep scan --config p/python --config p/security-audit --config p/javascript \
+            --metrics=off --error $BASELINE
