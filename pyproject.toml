@@ -4,7 +4,14 @@ version = "0.1.0"
 description = "ShopAgent: the agent under test for Differential (contract 1)"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
-dependencies = ["anthropic>=0.40"]
+dependencies = [
+    "anthropic>=0.40",
+    "clickhouse-connect>=1.10.0",
+    "fastapi>=0.143.0",
+    "openai>=3.28.0",
+    "python-dotenv>=1.2.4",
+    "uvicorn[standard]>=0.54.0",
+]
 
 [dependency-groups]
 dev = ["pytest>=8.3"]
