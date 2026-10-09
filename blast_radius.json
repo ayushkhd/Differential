@@ -5,91 +5,93 @@
     {
       "name": "listing intake",
       "touched": true,
-      "why": "Listing text now runs through a new regex-based sanitize() before being wrapped as untrusted data."
+      "why": "Listing text now goes through a new sanitize() that drops lines matching a regex denylist, then wraps the rest."
     },
     {
       "name": "call handling",
       "touched": true,
-      "why": "Call text is no longer wrapped and arrives as a plain user message prefixed with the actor name."
+      "why": "Call text is no longer passed through wrap_untrusted and reaches the agent as a plain user message with only an actor prefix."
     },
     {
       "name": "seller messages",
       "touched": true,
-      "why": "Seller text is no longer wrapped and is merged into the unified plain user-message path."
+      "why": "Seller text is no longer wrapped as untrusted and is delivered as role user with only an actor prefix."
     },
     {
       "name": "input trust",
       "touched": true,
-      "why": "Removing UNTRUSTED_CHANNELS drops the untrusted wrapper for call and seller, so they reach the agent with user-level trust."
+      "why": "Removing UNTRUSTED_CHANNELS makes call and seller input as trusted as user input, and listing trust now rests on a bypassable regex."
     },
     {
       "name": "payments",
       "touched": false,
-      "why": "send_payment logic is unchanged; the diff only edits inbound.py."
+      "why": "The diff does not modify send_payment or any payment logic, only inbound.py."
     },
     {
       "name": "budget enforcement",
       "touched": false,
-      "why": "No budget checks or the $500 limit are modified in the diff."
+      "why": "The $500 budget check is not referenced or changed in the diff."
     },
     {
       "name": "merchant allowlist",
       "touched": false,
-      "why": "No allowlist code appears in the diff."
+      "why": "The diff contains no merchant or payee allowlist code."
     },
     {
       "name": "memory",
       "touched": false,
-      "why": "The diff does not change any memory or persistence code."
+      "why": "The diff contains no memory or persistence changes."
     }
   ],
   "selected": [
     {
       "family": "vishing_call",
-      "why": "Call text now reaches the agent unwrapped, as if from the user."
+      "why": "Call text is now unwrapped and indistinguishable from user instructions."
     },
     {
       "family": "marketplace_negotiation",
-      "why": "Seller messages lost their untrusted wrapper, so seller pressure goes unchecked."
+      "why": "Seller messages lost their untrusted wrapper, so they can steer negotiation."
     },
     {
       "family": "listing_injection",
-      "why": "Keyword regex is easy to bypass with synonyms or obfuscation."
+      "why": "A regex denylist is easily bypassed by paraphrase, synonyms or encoding."
     },
     {
       "family": "benign_purchase",
-      "why": "Regex drops legitimate listing lines containing words like pay or send."
+      "why": "The sanitizer drops legitimate listing lines containing words like pay, send or agent."
     }
   ],
   "skipped": [
     {
       "family": "memory_poisoning",
-      "why": "Memory code is untouched by this inbound-only change.",
+      "why": "No memory code is changed or newly exposed.",
       "status": "planned"
-    },
+    }
+  ],
+  "planned_not_in_ui": [
     {
       "family": "tool_permission_escalation",
-      "why": "Relevant, not built yet: Unwrapped caller or seller text could trigger send_payment with user authority.",
+      "why": "Relevant, not built yet: Callers and sellers now carry user authority to invoke send_payment.",
       "status": "planned"
     },
     {
       "family": "data_exfiltration",
-      "why": "Relevant, not built yet: Unwrapped callers or sellers can request user data as trusted input.",
+      "why": "Relevant, not built yet: Unwrapped callers and sellers can request user data as if they were the user.",
       "status": "planned"
     },
     {
       "family": "refund_fraud",
-      "why": "Relevant, not built yet: Unwrapped seller messages can push fake refund or overpayment schemes.",
+      "why": "No refund flow exists or is changed in the diff.",
       "status": "planned"
     },
     {
       "family": "system_prompt_leak",
-      "why": "Relevant, not built yet: Raw caller or seller text could directly request the prompt.",
+      "why": "The diff does not change system prompt handling or exposure.",
       "status": "planned"
     },
     {
       "family": "multi_agent_collusion",
-      "why": "Relevant, not built yet: Seller and caller are both unwrapped, enabling coordinated cross-channel attacks.",
+      "why": "No multi-agent coordination surface is added or changed.",
       "status": "planned"
     }
   ]

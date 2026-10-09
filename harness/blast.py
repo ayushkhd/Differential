@@ -88,8 +88,11 @@ def analyze(pr: int, title: str, diff: str) -> dict:
             skipped.append({"family": f["family"], "why": why, "status": "planned"})
         else:
             skipped.append({"family": f["family"], "why": f["why"], "status": "skipped"})
+    # web/blast.js only knows these family ids; other planned families go in a field it ignores.
+    ui_known = set(BUILT) | {"memory_poisoning"}
     return {"pr": pr, "model": MODEL, "capabilities": out["capabilities"], "selected": selected,
-            "skipped": skipped}
+            "skipped": [f for f in skipped if f["family"] in ui_known],
+            "planned_not_in_ui": [f for f in skipped if f["family"] not in ui_known]}
 
 
 def main() -> None:

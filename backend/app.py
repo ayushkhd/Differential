@@ -84,6 +84,18 @@ def _tiles(run_id: str, cutoff: datetime) -> list[dict]:
     return tiles
 
 
+def _best_stored_run() -> str:
+    """Replay source: the most recent finished run with the most attacks (every sandbox done or error)."""
+    rows = db.client().query(
+        "SELECT run_id FROM events GROUP BY run_id "
+        "HAVING countIf(type = 'status' AND JSONExtractString(payload, 'state') IN ('done', 'error'))"
+        " = 2 * uniqExact(attack_id) "
+        "ORDER BY uniqExact(attack_id) DESC, max(ts) DESC LIMIT 1").result_rows
+    if not rows:
+        raise HTTPException(404, "no finished run to replay")
+    return rows[0][0]
+
+
 class RunRequest(BaseModel):
     replay: bool = False
 
@@ -91,7 +103,7 @@ class RunRequest(BaseModel):
 @app.post("/api/run")
 def post_run(req: RunRequest):
     if req.replay:
-        source = os.environ.get("DIFFERENTIAL_REPLAY_RUN") or _resolve(None)[0]
+        source = os.environ.get("DIFFERENTIAL_REPLAY_RUN") or _best_stored_run()
         first = db.client().query("SELECT min(ts) FROM events WHERE run_id = {r:String}",
                                   parameters={"r": source}).result_rows[0][0]
         replay_id = f"replay_{source}_{int(time.time())}"
@@ -177,7 +189,7 @@ def get_verdicts(run_id: str | None = None):
         f["main_fail_rate"] = round(sum(m) / len(m), 2) if m else None
         f["pr_fail_rate"] = round(sum(p) / len(p), 2) if p else None
         fam_out.append(f)
-    return {"run_id": run_id or rid, "complete": summary["pending"] == 0,
+    return {"run_id": run_id or rid, "complete": bool(tiles) and summary["pending"] == 0,
             "summary": {"total": len(tiles), **summary}, "families": fam_out,
             "attacks": [{"attack_id": t["attack_id"], "family": t["family"], "verdict": t["verdict"]}
                         for t in tiles]}
