@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a0d14">
+  <title>Differential · Blast radius</title>
+  <link rel="stylesheet" href="./blast.css">
+  <script src="./preview-data.js" defer></script>
+  <script src="./blast.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Differential blast radius"><span class="brand-mark" aria-hidden="true">↯</span> differential<span class="brand-tag">CHANGE CONFIDENCE</span></a>
+    <div class="agent-label"><span class="status-dot"></span> ShopAgent<span class="slash">/</span><span class="mono">LOCAL</span></div>
+    <span class="source-badge" id="source-badge">CONNECTING</span>
+  </header>
+  <main>
+    <section class="hero">
+      <div><div class="eyebrow"><span class="tiny-line"></span> 01 / BLAST RADIUS</div><h1>One change.<br><span>Every attack that matters.</span></h1><p>Map changed capabilities to the attacks that test them.<br>Safety is measured by the paired runs that follow.</p></div>
+      <div class="coverage"><div class="coverage-value"><span id="selected-count">—</span><span class="coverage-total">/ 4</span></div><span>attack families selected</span><div class="coverage-bars" id="coverage-bars" aria-hidden="true"></div><div id="touched-count" class="coverage-caption">Waiting for blast-radius contract</div></div>
+    </section>
+    <section class="pr-strip" aria-label="Pull request and data source">
+      <div class="pr-identity"><span class="pr-icon" aria-hidden="true">⑂</span><div><span class="mono">CHANGE UNDER REVIEW</span><h2 id="pr-title">Awaiting PR <span>Backend contract</span></h2></div></div>
+      <div class="build-pair"><span>main</span><span class="pair-arrow">→</span><span id="pr-version">PR</span></div>
+      <div class="pr-actions"><button class="button secondary" id="refresh" type="button">↻ Refresh</button><button class="button primary" id="edit-diff" type="button" hidden>Analyze PR diff <span aria-hidden="true">↗</span></button></div>
+    </section>
+    <div class="notice" id="provenance-notice" role="status">Connecting to the local backend…</div>
+    <div class="error" id="error" role="alert" hidden></div>
+    <section class="workspace">
+      <div class="map-panel">
+        <div class="map-toolbar"><div><span class="eyebrow">IMPACT MAP</span><span class="map-subtitle">PR diff → capabilities → attack families</span></div><button class="button replay-button" id="replay" type="button" disabled><span aria-hidden="true">▷</span> Trace impact</button></div>
+        <div class="map-labels" aria-hidden="true"><span>THE CHANGE</span><span>AGENT CAPABILITIES</span><span>ATTACK SELECTION</span></div>
+        <div class="impact-map" id="impact-map" aria-label="PR changes connected to capabilities and selected attack families">
+          <svg class="connections" id="connections" aria-hidden="true"></svg>
+          <button class="change-node" id="change-node" type="button" aria-label="Inspect the PR input handler change"><span class="change-glyph" aria-hidden="true">↯</span><span class="change-number" id="change-number">PR #42</span><span class="change-label">Input boundary</span><span class="change-status" id="change-status">WAITING</span></button>
+          <div id="capability-nodes"></div><div id="family-nodes"></div>
+        </div>
+        <div class="map-footer"><div class="legend"><span><i class="legend-touched"></i> Touched</span><span><i class="legend-focus"></i> Selected path</span><span><i class="legend-neutral"></i> Untouched</span></div><span class="mono" id="map-status">NO ATTACKS RUN HERE</span></div>
+      </div>
+      <aside class="inspector" aria-label="Selected capability or attack family"><div class="inspector-top"><span class="eyebrow">WHY THIS PATH?</span><span id="inspector-kind" class="mono">SELECTION</span></div><h2 id="inspector-title">Waiting for report</h2><span class="inspector-badge" id="inspector-badge">—</span><p id="inspector-reason" aria-live="polite">Load the blast-radius contract to explore the map.</p><div id="inspector-details"></div><div class="policy-box"><span class="eyebrow">SHOPAGENT POLICY</span><div><span>$500</span> total budget</div><div><span>Allowlisted</span> payment recipients only</div><span class="policy-caption">These are test targets, not safety guarantees.</span></div></aside>
+    </section>
+    <section class="attack-section"><div class="section-heading"><div><span class="eyebrow">SELECTED FOR THE HARNESS</span><h2>Four ways to test this change.</h2></div><span class="mono" id="attack-summary">WAITING FOR SELECTION</span></div><div class="attack-cards" id="attack-cards"></div></section>
+    <section class="skipped-section"><div class="section-heading"><div><span class="eyebrow">EXPLICITLY OUT OF THIS RUN</span><h2>Skipped, with a reason.</h2></div><span class="mono" id="skipped-count">—</span></div><div class="skipped-list" id="skipped-list"></div></section>
+    <section class="contract-section"><div><span class="eyebrow">CONTRACT 3</span><h2>Ready for the attack harness.</h2><p>One validated JSON report. The harness selects families and writes the run events.</p></div><div class="contract-actions"><a href="/api/blast" class="endpoint" target="_blank" rel="noopener"><span>GET</span> /api/blast ↗</a><button class="button secondary" type="button" id="download" disabled>Download JSON</button><label class="button secondary file-label">Import contract<input id="import-json" type="file" accept="application/json,.json"></label></div></section>
+    <details class="raw-contract"><summary>Inspect blast_radius.json</summary><pre id="raw-contract">Waiting for backend…</pre></details>
+    <footer><span><span class="status-dot"></span> Attack selection only. Verdicts come from paired runs and ClickHouse.</span><span class="mono">DIFFERENTIAL / HACKATHON EDITION</span></footer>
+  </main>
+  <dialog id="diff-dialog" aria-labelledby="diff-title"><form id="diff-form"><div class="dialog-header"><div><span class="eyebrow">ONE OPENAI CALL</span><h2 id="diff-title">Read the change. Select the tests.</h2></div><button class="close-button" id="close-dialog" type="button" aria-label="Close diff analyzer">×</button></div><p class="dialog-description">Paste a unified PR diff. The model maps capabilities and selects attack families; it does not run attacks or decide the merge.</p><div class="diff-fields"><label>PR number<input id="pr-input" type="number" min="1" value="42" required></label><div class="provider-info"><span class="eyebrow">BACKEND MODEL</span><span id="model-label" class="mono">Checking configuration…</span></div></div><label class="diff-label">Unified diff<textarea id="diff-input" placeholder="diff --git a/shopagent.py b/shopagent.py&#10;--- a/shopagent.py&#10;+++ b/shopagent.py&#10;@@ ..." rows="12" required spellcheck="false"></textarea></label><div class="dialog-error" id="dialog-error" role="alert" hidden></div><div class="dialog-footer"><span id="analyze-status">API key stays on the backend.</span><button id="analyze" class="button primary" type="submit">Analyze & save JSON ↗</button></div></form></dialog>
+</body>
+</html>

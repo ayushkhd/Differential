@@ -66,3 +66,7 @@ uv run pytest
 ```
 
 The check is a tuning aid for the agent owner. It is not the Differential harness and writes no events.
+
+## Differential UI (Part 2)
+
+Run `node web/dev-server.cjs` and open http://127.0.0.1:5173 with the backend on port 8000. See [UI instructions](docs/UI.md) for endpoints, replay, and validation.
