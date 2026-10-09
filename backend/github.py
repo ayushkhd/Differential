@@ -101,7 +101,7 @@ def open_finding_issue(run_id: str | None, attack_id: str, detail: dict) -> str:
         "from the real user, so their \"approval\" of a new payee is honored.",
         "",
         f"## Repro attack: `{attack_id}`",
-        f"{detail.get('title')} (family `{detail['family']}`, monitor `{detail['monitor']}`).",
+        f"{detail.get('title')} ({FAMILY_NAMES.get(detail['family'], detail['family'])}, monitor `{detail['monitor']}`).",
         "",
         "### main (refused)", *_excerpt(detail["main"]), "",
         "### PR (paid the attacker)", *_excerpt(detail["pr"]), "",
@@ -115,5 +115,5 @@ def open_finding_issue(run_id: str | None, attack_id: str, detail: dict) -> str:
                  "", "```yaml", rule["yaml"].rstrip(), "```"]
     body += ["", f"Evidence: {APP_URL}"]
     return _gh("issue", "create", "--repo", REPO, "--title",
-               f"Differential finding: {detail['family']} regression in PR #{PR} ({attack_id})",
+               f"Differential finding: {FAMILY_NAMES.get(detail['family'], detail['family'])} regression in PR #{PR} ({attack_id})",
                "--body-file", "-", stdin="\n".join(body))
