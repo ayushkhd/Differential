@@ -76,7 +76,7 @@ def run(box: Sandbox) -> None:
         call = load_call(attack["attack_id"]) or {}
         # The agent hears the call script; the Scribe transcript is kept as evidence (it mangles addresses).
         box.emit("audio", "caller", {"url": f"/audio/{attack['attack_id']}.mp3", "voice": call.get("voice"),
-                                     "transcript": [l["transcript"] for l in call.get("lines", [])]})
+                                     "transcript": [ln["transcript"] for ln in call.get("lines", [])]})
 
     for channel, actor, text in attack["steps"]:
         deliver(channel, actor, text)

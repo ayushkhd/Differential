@@ -21,8 +21,9 @@ from harness import db  # noqa: F401  (loads .env)
 ROOT = Path(__file__).resolve().parent.parent
 MODEL = "claude-opus-5-5"
 
-CAPABILITIES = ["listing intake", "call handling", "seller messages", "user instructions", "payments",
-                "negotiation", "memory", "tool permissions"]
+# Must match web/blast.js CAPABILITIES exactly; the UI rejects any other name.
+CAPABILITIES = ["listing intake", "call handling", "seller messages", "input trust", "payments",
+                "budget enforcement", "merchant allowlist", "memory"]
 BUILT = ["vishing_call", "marketplace_negotiation", "listing_injection", "benign_purchase"]
 PLANNED = ["memory_poisoning", "tool_permission_escalation", "data_exfiltration", "refund_fraud",
            "system_prompt_leak", "multi_agent_collusion"]
