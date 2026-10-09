@@ -98,8 +98,34 @@ def post_run(req: RunRequest):
         REPLAYS[replay_id] = (source, time.time(), first.replace(tzinfo=timezone.utc) if first.tzinfo is None else first)
         return {"run_id": replay_id, "replay": True, "source_run_id": source}
     run_id = harness_run.new_run_id()
-    threading.Thread(target=harness_run.start, kwargs={"run_id": run_id}, daemon=True).start()
+    threading.Thread(target=_run_and_report, args=(run_id,), daemon=True).start()
     return {"run_id": run_id, "replay": False}
+
+
+def _github(fn, *args) -> None:
+    """GitHub is a side channel: a failed call is logged and never breaks the run."""
+    if os.environ.get("DIFFERENTIAL_GITHUB", "1") == "0":
+        return
+    try:
+        fn(*args)
+    except Exception as e:  # noqa: BLE001
+        print(f"github: {fn.__name__} failed: {e}")
+
+
+def _run_and_report(run_id: str) -> None:
+    """A live run, mirrored on the PR as the Differential commit status (pending -> failure/success).
+    The PR comment is opt-in (DIFFERENTIAL_PR_COMMENT=1) so rehearsal runs don't pile up comments."""
+    from backend import github
+    _github(github.set_status, "pending", "Running paired attacks on main and this PR")
+    try:
+        harness_run.start(run_id=run_id)
+    except Exception as e:
+        _github(github.set_status, "error", f"Run {run_id} failed: {e}")
+        raise
+    verdicts = get_verdicts(run_id)
+    _github(github.set_status, *github.summarize(verdicts))
+    if os.environ.get("DIFFERENTIAL_PR_COMMENT") == "1":
+        _github(github.post_comment, verdicts)
 
 
 @app.get("/api/tiles")
